@@ -2,3 +2,5 @@
 ChronoMind
 *.exe
 .DS_Store
+conf/
+data/
