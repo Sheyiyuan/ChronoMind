@@ -3,7 +3,7 @@ package logos
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/Sheyiyuan/ChronoMind/typed"
+	"github.com/Sheyiyuan/ChronoMind/config"
 	"io"
 	"log"
 	"os"
@@ -23,7 +23,7 @@ func InitLog() {
 	log.SetOutput(os.Stdout)            // 设置日志输出到标准输出
 	log.SetFlags(log.Ldate | log.Ltime) // 设置日志格式
 	// 读取配置文件
-	globalConfig := typed.GlobalConfig{}
+	globalConfig := config.GlobalConfig{}
 	// 直接读取./conf/config.json
 	bytes, err := os.ReadFile("./conf/config.json")
 	if err != nil {
@@ -48,7 +48,7 @@ const (
 )
 
 func Trace(text string, msg ...interface{}) {
-	if LogLevel > 0 {
+	if LogLevel > 1 {
 		return
 	}
 	log.SetOutput(io.MultiWriter(os.Stdout, LogFile))
@@ -69,7 +69,7 @@ func Trace(text string, msg ...interface{}) {
 }
 
 func Debug(text string, msg ...interface{}) {
-	if LogLevel > 1 {
+	if LogLevel > 2 {
 		return
 	}
 	log.SetOutput(io.MultiWriter(os.Stdout, LogFile))
@@ -77,7 +77,7 @@ func Debug(text string, msg ...interface{}) {
 }
 
 func Info(text string, msg ...interface{}) {
-	if LogLevel > 2 {
+	if LogLevel > 3 {
 		return
 	}
 	msgText := fmt.Sprintf(text, msg...)
@@ -86,7 +86,7 @@ func Info(text string, msg ...interface{}) {
 }
 
 func Notice(text string, msg ...interface{}) {
-	if LogLevel > 3 {
+	if LogLevel > 4 {
 		return
 	}
 	msgText := fmt.Sprintf(text, msg...)
@@ -95,7 +95,7 @@ func Notice(text string, msg ...interface{}) {
 }
 
 func Warn(text string, msg ...interface{}) {
-	if LogLevel > 4 {
+	if LogLevel > 5 {
 		return
 	}
 	msgText := fmt.Sprintf(text, msg...)
@@ -104,7 +104,7 @@ func Warn(text string, msg ...interface{}) {
 }
 
 func Error(text string, msg ...interface{}) {
-	if LogLevel > 5 {
+	if LogLevel > 6 {
 		return
 	}
 	msgText := fmt.Sprintf(text, msg...)

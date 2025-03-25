@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"github.com/Sheyiyuan/ChronoMind/config"
 	"github.com/Sheyiyuan/ChronoMind/logos"
-	"github.com/Sheyiyuan/ChronoMind/typed"
 	"io"
 	"os"
 )
@@ -35,19 +35,8 @@ func initCore() error {
 	}
 
 	// 检查并更新配置文件
-	var globalConfig typed.GlobalConfig
+	var globalConfig config.GlobalConfig
 
-	var defaultHostPortConfig typed.HostPortConfig
-	defaultHostPortConfig.IsGlobal = false
-	defaultHostPortConfig.Port = 8080
-
-	var defaultLogConfig typed.LogConfig
-	defaultLogConfig.LogLevel = 2
-
-	defaultConfig := typed.GlobalConfig{
-		HostPortConfig: defaultHostPortConfig,
-		LogConfig:      defaultLogConfig,
-	}
 	// 读取配置文件
 	file, err := os.Open("./conf/config.json")
 	if err != nil {
@@ -69,20 +58,14 @@ func initCore() error {
 	}
 
 	// 检查并更新配置
-	if globalConfig == (typed.GlobalConfig{}) {
-		globalConfig = defaultConfig
+	if globalConfig.HostPortConfig.Port < 1024 || globalConfig.HostPortConfig.Port > 65535 {
+		globalConfig.HostPortConfig.Port = 8080
 	}
-	if globalConfig.HostPortConfig == (typed.HostPortConfig{}) {
-		globalConfig.HostPortConfig = defaultHostPortConfig
+	if globalConfig.LogConfig.LogLevel < 1 || globalConfig.LogConfig.LogLevel > 7 {
+		globalConfig.LogConfig.LogLevel = 3
 	}
-	if globalConfig.LogConfig == (typed.LogConfig{}) {
-		globalConfig.LogConfig = defaultLogConfig
-	}
-	if globalConfig.HostPortConfig.Port < 1024 {
-		globalConfig.HostPortConfig.Port = defaultHostPortConfig.Port
-	}
-	if globalConfig.LogConfig.LogLevel < 0 || globalConfig.LogConfig.LogLevel > 6 {
-		globalConfig.LogConfig.LogLevel = 2
+	if globalConfig.AiApiConfig.AiWorkConfig.MaxTokens < 1 {
+		globalConfig.AiApiConfig.AiWorkConfig.MaxTokens = 100
 	}
 	formattedJSON, err := json.MarshalIndent(globalConfig, "", "  ")
 	if err != nil {
